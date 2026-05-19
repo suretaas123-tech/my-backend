@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "media_kit_leads",
+  "info": {
+    "singularName": "media-kit-lead",
+    "pluralName": "media-kit-leads",
+    "displayName": "media-kit-lead"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "company": {
+      "type": "string",
+      "required": true
+    },
+    "downloadedAt": {
+      "type": "datetime"
+    }
+  }
+}

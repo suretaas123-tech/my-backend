@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "write_for_us_submissions",
+  "info": {
+    "singularName": "write-for-us-submission",
+    "pluralName": "write-for-us-submissions",
+    "displayName": "write-for-us-submission"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "topic": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

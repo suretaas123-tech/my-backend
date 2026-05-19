@@ -1,0 +1,102 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "article"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
+    "excerpt": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "body": {
+      "type": "blocks",
+      "required": true
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "readTime": {
+      "type": "string"
+    },
+    "displayDate": {
+      "type": "date"
+    },
+    "isPopular": {
+      "type": "boolean",
+      "default": false
+    },
+    "popularRank": {
+      "type": "integer"
+    },
+    "isTrending": {
+      "type": "boolean",
+      "default": false
+    },
+    "showInHero": {
+      "type": "boolean",
+      "default": false
+    },
+    "heroOrder": {
+      "type": "integer"
+    },
+    "showInLatestColumns": {
+      "type": "boolean"
+    },
+    "columnGroup": {
+      "type": "integer"
+    },
+    "columnRole": {
+      "type": "enumeration",
+      "enum": [
+        "featured ",
+        "compact"
+      ]
+    },
+    "columnSortOrder": {
+      "type": "integer"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "articles"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "articles"
+    }
+  }
+}

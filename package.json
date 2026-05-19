@@ -1,0 +1,43 @@
+{
+  "name": "my-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Strapi application",
+  "scripts": {
+    "build": "strapi build",
+    "console": "strapi console",
+    "deploy": "strapi deploy",
+    "dev": "strapi develop",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "upgrade": "npx @strapi/upgrade latest",
+    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+  },
+  "dependencies": {
+    "@strapi/admin": "^5.45.0",
+    "@strapi/core": "^5.45.0",
+    "@strapi/design-system": "^2.2.0",
+    "@strapi/helper-plugin": "^4.25.23",
+    "@strapi/plugin-cloud": "5.43.0",
+    "@strapi/plugin-users-permissions": "5.43.0",
+    "@strapi/provider-email-nodemailer": "^5.45.1",
+    "@strapi/strapi": "^5.45.0",
+    "dotenv": "^17.4.2",
+    "nodemailer": "^8.0.7",
+    "pg": "^8.21.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "sib-api-v3-sdk": "^8.5.0",
+    "styled-components": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0 <=24.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "f9227937-7ff7-48f8-9069-4f2a5be25f0a",
+    "installId": "0bb4b719772f07f083b6b5e387b601dba0e81b024d817a140598d0f8f9dbddad"
+  }
+}
