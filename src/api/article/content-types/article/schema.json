@@ -17,6 +17,7 @@
     },
     "slug": {
       "type": "uid",
+      "targetField": "title",
       "required": true
     },
     "excerpt": {
@@ -26,7 +27,7 @@
       "type": "text"
     },
     "body": {
-      "type": "blocks",
+      "type": "markdown",
       "required": true
     },
     "featuredImage": {
@@ -64,9 +65,6 @@
     "heroOrder": {
       "type": "integer"
     },
-    "showInLatestColumns": {
-      "type": "boolean"
-    },
     "columnGroup": {
       "type": "integer"
     },
@@ -97,6 +95,23 @@
       "relation": "manyToOne",
       "target": "api::author.author",
       "inversedBy": "articles"
+    },
+    "articleType": {
+      "type": "enumeration",
+      "enum": [
+        "news",
+        "article ",
+        "whitepaper",
+        "event",
+        "interview",
+        "guest"
+      ]
+    },
+    "events": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event.event",
+      "mappedBy": "article"
     }
   }
 }
