@@ -23,7 +23,7 @@
       "type": "text"
     },
     "body": {
-      "type": "richtext"
+      "type": "markdown"
     },
     "featuredImage": {
       "type": "media",
