@@ -48,6 +48,14 @@
       "relation": "oneToMany",
       "target": "api::article.article",
       "mappedBy": "category"
+    },
+    "categoryKind": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "topic ",
+        "resource"
+      ]
     }
   }
 }

@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "eventType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "conference",
+        "webinar",
+        "summit",
+        "roundtable",
+        "fireside_chat",
+        "panel_discussion",
+        "product_launch",
+        "awards",
+        "networking",
+        "training",
+        "podcast"
+      ]
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime"
+    },
+    "location": {
+      "type": "string"
+    },
+    "registerationUrl": {
+      "type": "string"
+    },
+    "isFeatured": {
+      "type": "boolean"
+    },
+    "article": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::article.article",
+      "inversedBy": "events"
+    },
+    "publishDate": {
+      "type": "datetime"
+    }
+  }
+}

@@ -22,6 +22,14 @@
     "topic": {
       "type": "string",
       "required": true
+    },
+    "approvalStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
     }
   }
 }
