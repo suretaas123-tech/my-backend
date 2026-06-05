@@ -27,7 +27,7 @@
       "type": "text"
     },
     "body": {
-      "type": "markdown",
+      "type": "richtext",
       "required": true
     },
     "featuredImage": {
