@@ -16,9 +16,9 @@
       "required": true
     },
     "slug": {
-      "type": "uid",
-      "required": true
-    },
+  "type": "uid",
+  "targetField": "name"
+},
     "articles": {
       "type": "relation",
       "relation": "manyToMany",

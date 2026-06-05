@@ -16,7 +16,8 @@
       "required": true
     },
     "slug": {
-      "type": "uid"
+    "type": "uid",
+    "targetField": "name"
     },
     "title": {
       "type": "string"
