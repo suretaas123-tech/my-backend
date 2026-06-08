@@ -20,12 +20,6 @@
       "targetField": "title",
       "required": true
     },
-    "excerpt": {
-      "type": "string"
-    },
-    "description": {
-      "type": "text"
-    },
     "body": {
       "type": "richtext",
       "required": true
@@ -40,9 +34,6 @@
         "videos",
         "audios"
       ]
-    },
-    "readTime": {
-      "type": "string"
     },
     "displayDate": {
       "type": "date"
@@ -61,9 +52,6 @@
     "showInHero": {
       "type": "boolean",
       "default": false
-    },
-    "heroOrder": {
-      "type": "integer"
     },
     "columnGroup": {
       "type": "integer"
