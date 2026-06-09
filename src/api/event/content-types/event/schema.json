@@ -68,12 +68,6 @@
     "isFeatured": {
       "type": "boolean"
     },
-    "article": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::article.article",
-      "inversedBy": "events"
-    },
     "publishDate": {
       "type": "datetime"
     }

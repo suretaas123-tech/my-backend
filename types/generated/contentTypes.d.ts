@@ -464,11 +464,11 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     displayDate: Schema.Attribute.Date;
-    events: Schema.Attribute.Relation<'oneToMany', 'api::event.event'>;
     featuredImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     > &
       Schema.Attribute.Required;
+    isFeatured: Schema.Attribute.Boolean;
     isPopular: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     isTrending: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -606,7 +606,6 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    article: Schema.Attribute.Relation<'manyToOne', 'api::article.article'>;
     body: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
