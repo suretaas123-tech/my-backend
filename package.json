@@ -18,7 +18,7 @@
     "@strapi/admin": "^5.45.0",
     "@strapi/core": "^5.45.0",
     "@strapi/design-system": "^2.2.0",
-     "@strapi/plugin-cloud": "5.43.0",
+    "@strapi/plugin-cloud": "5.43.0",
     "@strapi/plugin-users-permissions": "5.43.0",
     "@strapi/provider-email-nodemailer": "^5.45.1",
     "@strapi/strapi": "^5.45.0",
@@ -38,5 +38,8 @@
   "strapi": {
     "uuid": "f9227937-7ff7-48f8-9069-4f2a5be25f0a",
     "installId": "0bb4b719772f07f083b6b5e387b601dba0e81b024d817a140598d0f8f9dbddad"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }
