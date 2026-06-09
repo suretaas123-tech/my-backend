@@ -612,19 +612,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     endDate: Schema.Attribute.DateTime;
     eventType: Schema.Attribute.Enumeration<
-      [
-        'conference',
-        'webinar',
-        'summit',
-        'roundtable',
-        'fireside_chat',
-        'panel_discussion',
-        'product_launch',
-        'awards',
-        'networking',
-        'training',
-        'podcast',
-      ]
+      ['Upcoming Conferences', 'Live Webinars', 'On Demand Webinars']
     > &
       Schema.Attribute.Required;
     featuredImage: Schema.Attribute.Media<

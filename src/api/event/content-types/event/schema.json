@@ -39,17 +39,9 @@
       "type": "enumeration",
       "required": true,
       "enum": [
-        "conference",
-        "webinar",
-        "summit",
-        "roundtable",
-        "fireside_chat",
-        "panel_discussion",
-        "product_launch",
-        "awards",
-        "networking",
-        "training",
-        "podcast"
+        "Upcoming Conferences",
+        "Live Webinars",
+        "On Demand Webinars"
       ]
     },
     "startDate": {
