@@ -292,19 +292,22 @@ return {
     // GET SINGLE ARTICLE
     async findOne(ctx) {
 
-      const { id } = ctx.params;
+      const id = Number(ctx.params.id);
+
+if (isNaN(id)) {
+  return ctx.badRequest('Invalid article id');
+}
 
       const item = await strapi.db
         .query('api::article.article')
         .findOne({
 
-          where: {
-            id: Number(id),
-
-            publishedAt: {
-              $notNull: true
-            }
-          },
+         where: {
+  id,
+  publishedAt: {
+    $notNull: true
+  }
+},
 
           populate: {
             featuredImage: true,
@@ -410,10 +413,40 @@ return {
         updatedAt:
           item.updatedAt || null,
 
-        publishedAt:
-          item.publishedAt || null,
+       publishedAt:
+  item.publishedAt || null,
       };
-    }
+    },
+
+    // SEARCH ARTICLES
+    async search(ctx) {
+  const { q } = ctx.query;
+
+  if (!q) {
+    return {
+      data: []
+    };
+  }
+
+  try {
+    const articles = await strapi.documents('api::article.article').findMany({
+      filters: {
+        title: {
+          $containsi: q
+        }
+      }
+    });
+
+    return {
+      data: articles
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message
+    };
+  }
+}
 
   })
 );

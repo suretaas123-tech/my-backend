@@ -97,6 +97,12 @@
     },
     "isFeatured": {
       "type": "boolean"
+    },
+    "description": {
+      "type": "text"
+    },
+    "excerpt": {
+      "type": "string"
     }
   }
 }
