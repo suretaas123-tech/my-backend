@@ -13,7 +13,7 @@ module.exports = {
       };
     }
 
-    // SEARCH ARTICLES
+    // ARTICLES
     const articles = await strapi.db
       .query('api::article.article')
       .findMany({
@@ -34,14 +34,22 @@ module.exports = {
         }
       });
 
-    // REMOVE DUPLICATE ARTICLES
     const uniqueArticles = [
       ...new Map(
         articles.map(item => [item.documentId, item])
       ).values()
     ];
 
-    // SEARCH EVENTS
+    const formattedArticles = uniqueArticles.map(article => ({
+      ...article,
+      featuredImage: article.featuredImage
+        ? {
+            url: article.featuredImage.url
+          }
+        : null
+    }));
+
+    // EVENTS
     const events = await strapi.db
       .query('api::event.event')
       .findMany({
@@ -52,21 +60,32 @@ module.exports = {
           title: {
             $containsi: q
           }
+        },
+        populate: {
+          featuredImage: true
         }
       });
 
-    // REMOVE DUPLICATE EVENTS
     const uniqueEvents = [
       ...new Map(
         events.map(item => [item.documentId, item])
       ).values()
     ];
 
+    const formattedEvents = uniqueEvents.map(event => ({
+      ...event,
+      featuredImage: event.featuredImage
+        ? {
+            url: event.featuredImage.url
+          }
+        : null
+    }));
+
     return {
-      totalArticles: uniqueArticles.length,
-      totalEvents: uniqueEvents.length,
-      articles: uniqueArticles,
-      events: uniqueEvents
+      totalArticles: formattedArticles.length,
+      totalEvents: formattedEvents.length,
+      articles: formattedArticles,
+      events: formattedEvents
     };
   }
 };
