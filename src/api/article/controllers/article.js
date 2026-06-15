@@ -419,7 +419,8 @@ if (isNaN(id)) {
     },
 
     // SEARCH ARTICLES
-    async search(ctx) {
+    // SEARCH ARTICLES + EVENTS
+async search(ctx) {
   const { q } = ctx.query;
 
   if (!q) {
@@ -428,24 +429,54 @@ if (isNaN(id)) {
     };
   }
 
-  try {
-    const articles = await strapi.documents('api::article.article').findMany({
-      filters: {
-        title: {
-          $containsi: q
-        }
+  const results = await strapi.db
+    .query('api::article.article')
+    .findMany({
+      where: {
+        publishedAt: {
+          $notNull: true
+        },
+
+        $or: [
+          {
+            title: {
+              $containsi: q
+            }
+          },
+          {
+            events: {
+              title: {
+                $containsi: q
+              }
+            }
+          }
+        ]
+      },
+
+      populate: {
+        featuredImage: true,
+
+        category: {
+          populate: {
+            coverImage: true
+          }
+        },
+
+        author: {
+          populate: {
+            avatar: true
+          }
+        },
+
+        tags: true,
+        events: true
       }
     });
 
-    return {
-      data: articles
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      error: error.message
-    };
-  }
+  return {
+    total: results.length,
+    data: results
+  };
 }
 
   })

@@ -1,50 +1,72 @@
-export default {
+'use strict';
+
+module.exports = {
   async globalSearch(ctx) {
     const { q } = ctx.query;
 
     if (!q) {
-      ctx.body = { data: [] };
-      return;
+      return {
+        totalArticles: 0,
+        totalEvents: 0,
+        articles: [],
+        events: []
+      };
     }
 
-    const contentTypes = Object.values(strapi.contentTypes).filter(
-      (ct) =>
-        ct.kind === "collectionType" &&
-        ct.uid.startsWith("api::")
-    );
-
-    let results = [];
-
-    for (const ct of contentTypes) {
-      try {
-        const entries = await strapi.documents(ct.uid).findMany({
-          filters: {
-            $or: [
-              { title: { $containsi: q } },
-              { name: { $containsi: q } },
-              { slug: { $containsi: q } },
-              { description: { $containsi: q } },
-              { content: { $containsi: q } },
-            ],
+    // SEARCH ARTICLES
+    const articles = await strapi.db
+      .query('api::article.article')
+      .findMany({
+        where: {
+          publishedAt: {
+            $notNull: true
           },
-          limit: 5,
-        });
+          title: {
+            $containsi: q
+          }
+        },
+        populate: {
+          featuredImage: true,
+          category: true,
+          author: true,
+          tags: true,
+          events: true
+        }
+      });
 
-        if (!entries || !Array.isArray(entries)) continue;
+    // REMOVE DUPLICATE ARTICLES
+    const uniqueArticles = [
+      ...new Map(
+        articles.map(item => [item.documentId, item])
+      ).values()
+    ];
 
-        const formatted = entries.map((item) => ({
-          id: item.id,
-          title: item.title || item.name || "No Title",
-          slug: item.slug || "",
-          type: ct.info.displayName,
-        }));
+    // SEARCH EVENTS
+    const events = await strapi.db
+      .query('api::event.event')
+      .findMany({
+        where: {
+          publishedAt: {
+            $notNull: true
+          },
+          title: {
+            $containsi: q
+          }
+        }
+      });
 
-        results.push(...formatted);
-      } catch (err) {
-        continue;
-      }
-    }
+    // REMOVE DUPLICATE EVENTS
+    const uniqueEvents = [
+      ...new Map(
+        events.map(item => [item.documentId, item])
+      ).values()
+    ];
 
-    ctx.body = { data: results };
-  },
+    return {
+      totalArticles: uniqueArticles.length,
+      totalEvents: uniqueEvents.length,
+      articles: uniqueArticles,
+      events: uniqueEvents
+    };
+  }
 };
