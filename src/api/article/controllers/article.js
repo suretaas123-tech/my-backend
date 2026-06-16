@@ -177,11 +177,11 @@ module.exports = createCoreController(
               }
             },
 
-            author: {
-              populate: {
-                avatar: true
-              }
-            },
+           authors: {
+  populate: {
+    avatar: true
+  }
+},
 
             tags: true,
 
@@ -192,6 +192,7 @@ module.exports = createCoreController(
             id: 'desc'
           }
         });
+        console.log(JSON.stringify(results[0], null, 2));
 
       const formattedData = results.map(item => ({
 
@@ -221,8 +222,8 @@ module.exports = createCoreController(
   category:
     formatCategory(item.category),
 
-  author:
-    formatAuthor(item.author),
+  authors:
+  item.authors?.map(author => formatAuthor(author)) || [],
 
   tags:
     formatTags(item.tags),
@@ -290,133 +291,117 @@ return {
     },
 
     // GET SINGLE ARTICLE
-    async findOne(ctx) {
+    // GET SINGLE ARTICLE
+async findOne(ctx) {
+  const id = Number(ctx.params.id);
 
-      const id = Number(ctx.params.id);
-
-if (isNaN(id)) {
-  return ctx.badRequest('Invalid article id');
-}
-
-      const item = await strapi.db
-        .query('api::article.article')
-        .findOne({
-
-         where: {
-  id,
-  publishedAt: {
-    $notNull: true
+  if (isNaN(id)) {
+    return ctx.badRequest('Invalid article id');
   }
-},
 
+  const item = await strapi.db
+    .query('api::article.article')
+    .findOne({
+      where: { id },
+
+      populate: {
+        featuredImage: true,
+
+        category: {
           populate: {
-            featuredImage: true,
+            coverImage: true,
+          },
+        },
 
-            category: {
-              populate: {
-                coverImage: true
-              }
-            },
+        authors: {
+          populate: {
+            avatar: true,
+          },
+        },
 
-            author: {
-              populate: {
-                avatar: true
-              }
-            },
+        tags: true,
 
-            tags: true,
+        events: true,
+      },
+    });
 
-            events: true,
-          }
-        });
+  if (!item) {
+    return ctx.notFound('Article not found');
+  }
 
-      if (!item) {
-        return ctx.notFound('Article not found');
-      }
+  return {
+    id: item.id || null,
 
-      return {
+    documentId: item.documentId || null,
 
-        id: item.id || null,
+    title: item.title || null,
 
-        documentId:
-          item.documentId || null,
+    slug: item.slug || null,
 
-        title: item.title || null,
+    excerpt: item.excerpt || null,
 
-        slug: item.slug || null,
+    description: item.description || null,
 
-        excerpt: item.excerpt || null,
+    body: extractText(item.body),
 
-        description:
-          item.description || null,
+    featuredImage: item.featuredImage
+      ? {
+          url: item.featuredImage.url,
+        }
+      : null,
 
-        body:
-          extractText(item.body),
+    category: formatCategory(item.category),
 
-        featuredImage:
-          item.featuredImage
-            ? {
-                url: item.featuredImage.url
-              }
-            : null,
+    authors:
+      item.authors?.map((author) =>
+        formatAuthor(author)
+      ) || [],
 
-        category:
-          formatCategory(item.category),
+    tags: formatTags(item.tags),
 
-        author:
-          formatAuthor(item.author),
+    events: formatEvents(item.events),
 
-        tags:
-          formatTags(item.tags),
+    articleType: item.articleType || null,
 
-        events:
-          formatEvents(item.events),
+    columnGroup: item.columnGroup || null,
 
-        articleType:
-          item.articleType || null,
+    columnRole: item.columnRole || null,
 
-        columnGroup:
-          item.columnGroup || null,
+    columnSortOrder: item.columnSortOrder || null,
 
-        columnRole:
-          item.columnRole || null,
+    showInLatestColumns:
+      item.showInLatestColumns || false,
 
-        columnSortOrder:
-          item.columnSortOrder || null,
+    isPopular:
+      item.isPopular || false,
 
-        showInLatestColumns:
-          item.showInLatestColumns || false,
+    popularRank:
+      item.popularRank || null,
 
-        isPopular:
-          item.isPopular || false,
+    isTrending:
+      item.isTrending || false,
 
-        popularRank:
-          item.popularRank || null,
+    showInHero:
+      item.showInHero || false,
 
-        isTrending:
-          item.isTrending || false,
+    heroOrder:
+      item.heroOrder || null,
 
-        showInHero:
-          item.showInHero || false,
+    publishDate:
+      item.publishDate ||
+      item.publishedAt ||
+      null,
 
-        heroOrder:
-          item.heroOrder || null,
+    createdAt:
+      item.createdAt || null,
 
-        publishDate:
-          item.publishDate ||
-          item.publishedAt ||
-          null,
+    updatedAt:
+      item.updatedAt || null,
 
-        createdAt:
-          item.createdAt || null,
-
-        updatedAt:
-          item.updatedAt || null,
-
-       publishedAt:
-  item.publishedAt || null,
-      };
-    },
+    publishedAt:
+      item.publishedAt || null,
+  };
+},
 
     // SEARCH ARTICLES
     // SEARCH ARTICLES + EVENTS
@@ -454,23 +439,20 @@ async search(ctx) {
       },
 
       populate: {
-        featuredImage: true,
-
-        category: {
-          populate: {
-            coverImage: true
-          }
-        },
-
-        author: {
-          populate: {
-            avatar: true
-          }
-        },
-
-        tags: true,
-        events: true
-      }
+  featuredImage: true,
+  category: {
+    populate: {
+      coverImage: true
+    }
+  },
+  authors: {
+    populate: {
+      avatar: true,
+    },
+  },
+  tags: true,
+  events: true,
+}
     });
 
   return {
