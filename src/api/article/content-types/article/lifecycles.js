@@ -33,6 +33,10 @@ module.exports = {
 
       console.log("PUBLISH DETECTED:", article.title);
 
+      const imageUrl =
+  article.image?.url
+    ? `https://api.theabm.info${article.image.url}`
+    : "https://theabm.info/wp-content/uploads/2021/01/Welcome.jpg";
     const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -62,12 +66,21 @@ Account-Based Marketing News & Insights
 </tr>
 
 <tr>
-<td style="padding:50px;">
+<td
+background="${imageUrl}"
+style="
+background-image:url('${imageUrl}');
+background-size:cover;
+background-position:center;
+padding:100px 40px;
+text-align:center;">
+
+<div style="background:rgba(0,0,0,0.6);padding:30px;">
 
 <span style="
-background:#dbeafe;
-color:#1d4ed8;
-padding:6px 12px;
+background:#0573AA;
+color:#ffffff;
+padding:8px 14px;
 border-radius:20px;
 font-size:12px;
 font-weight:bold;">
@@ -75,12 +88,20 @@ NEW ARTICLE
 </span>
 
 <h1 style="
-margin:25px 0 20px;
-font-size:36px;
+margin:20px 0 0;
+font-size:40px;
 line-height:1.3;
-color:#111827;">
+color:#ffffff;">
 ${article.title}
 </h1>
+
+</div>
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:50px;">
 
 <p style="
 font-size:18px;
@@ -90,6 +111,22 @@ ${article.description || article.excerpt || ""}
 </p>
 
 <p style="margin-top:40px;">
+<a
+href="https://theabm.info/article/${article.slug}"
+style="
+background:#2563eb;
+color:#ffffff;
+padding:16px 32px;
+text-decoration:none;
+border-radius:6px;
+font-weight:bold;
+display:inline-block;">
+Read Full Article →
+</a>
+</p>
+
+</td>
+</tr>
 <a
 href="https://theabm.info/article/${article.slug}"
 style="

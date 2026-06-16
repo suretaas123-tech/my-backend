@@ -452,7 +452,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
   attributes: {
     articleType: Schema.Attribute.Enumeration<
-      ['news', 'article ', 'whitepaper', 'event', 'interview', 'guest']
+      ['news', 'article ', 'whitepaper', 'interview', 'guest', 'podcast']
     >;
     author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
