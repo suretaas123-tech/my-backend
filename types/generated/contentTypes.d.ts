@@ -454,7 +454,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     articleType: Schema.Attribute.Enumeration<
       ['news', 'article ', 'whitepaper', 'interview', 'guest', 'podcast']
     >;
-    author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
+    authors: Schema.Attribute.Relation<'manyToMany', 'api::author.author'>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
     columnGroup: Schema.Attribute.Integer;
@@ -502,7 +502,7 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
+    articles: Schema.Attribute.Relation<'manyToMany', 'api::article.article'>;
     avatar: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     bio: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
