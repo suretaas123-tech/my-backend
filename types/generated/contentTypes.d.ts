@@ -482,7 +482,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     popularRank: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     showInHero: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    slug: Schema.Attribute.UID<''> & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
