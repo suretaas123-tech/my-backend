@@ -91,7 +91,7 @@ ${article.description || article.excerpt || ""}
 
 <p style="margin-top:40px;">
 <a
-href="https://theabm.info/article/${article.slug}"
+href="https://theabm.info/articles/${article.slug}"
 style="
 background:#2563eb;
 color:#ffffff;

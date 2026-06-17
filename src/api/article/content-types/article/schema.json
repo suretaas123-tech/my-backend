@@ -103,6 +103,10 @@
     },
     "excerpt": {
       "type": "string"
+    },
+    "newsletterSent": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
