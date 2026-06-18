@@ -481,6 +481,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     newsletterSent: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
+    newsletterSentAt: Schema.Attribute.DateTime;
     popularRank: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     showInHero: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

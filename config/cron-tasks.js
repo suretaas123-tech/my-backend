@@ -6,7 +6,7 @@ module.exports = {
   '0 19 * * *': async ({ strapi }) => {
     try {
       console.log('Running Daily Newsletter...');
-      console.log("EMAIL IMAGE:", imageUrl);
+
 
      const articles = await strapi.entityService.findMany(
   'api::article.article',
@@ -267,18 +267,19 @@ ${articleList}
         );
       }
 
-      // MARK AS SENT
-      for (const article of articles) {
-        await strapi.entityService.update(
-          'api::article.article',
-          article.id,
-          {
-            data: {
-              newsletterSent: true,
-            },
-          }
-        );
-      }
+    // MARK AS SENT
+for (const article of articles) {
+  await strapi.entityService.update(
+    'api::article.article',
+    article.id,
+    {
+      data: {
+        newsletterSent: true,
+        newsletterSentAt: new Date(),
+      },
+    }
+  );
+}
 
       console.log(
         `Newsletter sent with ${articles.length} articles to ${subscribers.length} subscribers`

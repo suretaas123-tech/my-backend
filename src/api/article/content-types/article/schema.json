@@ -107,6 +107,9 @@
     "newsletterSent": {
       "type": "boolean",
       "default": false
+    },
+    "newsletterSentAt": {
+      "type": "datetime"
     }
   }
 }
