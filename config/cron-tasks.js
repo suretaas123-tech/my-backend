@@ -3,44 +3,57 @@
 const axios = require('axios');
 
 module.exports = {
-  '0 19 * * *': async ({ strapi }) => {
+  '*/5 * * * *': async ({ strapi }) => {
     try {
       console.log('Running Daily Newsletter...');
-
+      console.log('Cron started:', new Date());
 
      const articles = await strapi.entityService.findMany(
   'api::article.article',
   {
     filters: {
-      newsletterSent: false,
       publishedAt: {
         $notNull: true,
       },
+      newsletterSent: false,
     },
     populate: {
       featuredImage: true,
       category: true,
-      authors: true,
-      tags: true,
     },
-    sort: { publishedAt: 'desc' },
+    sort: {
+      publishedAt: 'desc',
+    },
   }
 );
 
-      if (!articles.length) {
-        console.log('No new articles found');
-        return;
-      }
+console.log("All articles:", articles);
+
+articles.forEach(article => {
+  console.log({
+    title: article.title,
+    publishedAt: article.publishedAt,
+    newsletterSent: article.newsletterSent,
+  });
+});
+
+
+if (!articles.length) {
+  console.log('No new articles to send.');
+  return;
+}
 
       const subscribers = await strapi.entityService.findMany(
-        'api::subscriber.subscriber',
-        {}
-      );
+  'api::newsletter-subscriber.newsletter-subscriber',
+  {}
+);
 
-      if (!subscribers.length) {
-        console.log('No subscribers found');
-        return;
-      }
+console.log("Subscribers:", subscribers.length);
+
+if (!subscribers.length) {
+  console.log("No subscribers found");
+  return;
+}
 
       // CREATE ARTICLE CARDS
       const articleList = articles
@@ -56,11 +69,9 @@ console.log("EMAIL IMAGE:", imageUrl);
 
 
     const description =
-      article.excerpt ||
-      article.description ||
-      (article.body
-        ? article.body.substring(0, 180) + "..."
-        : "");
+  article.excerpt ||
+  article.description ||
+  "";
 
     return `
       <table
@@ -77,41 +88,28 @@ console.log("EMAIL IMAGE:", imageUrl);
         <tr>
 
           <!-- LEFT IMAGE -->
-          <td
-            width="40%"
-            style="
-              padding:20px;
-              vertical-align:top;
-            "
-          >
-            <img
-              src="${imageUrl}"
-              width="350"
-              style="
-                width:100%;
-                max-width:350px;
-                height:220px;
-                object-fit:cover;
-                border-radius:8px;
-                display:block;
-              "
-            />
+          <td width="30%" style="padding:15px;vertical-align:top;">
+        <img
+  src="${imageUrl}"
+  width="180"
+  style="
+    display:block;
+    width:180px;
+    max-width:180px;
+    height:auto;
+    border-radius:8px;
+  "
+/>
           </td>
 
           <!-- RIGHT CONTENT -->
-          <td
-            width="60%"
-            style="
-              padding:25px;
-              vertical-align:top;
-            "
-          >
+          <td width="70%" style="padding:20px;vertical-align:top;">
 
             <div
               style="
                 display:inline-block;
-                background:#0B5E94;
-                color:#ffffff;
+                background:#DBEAFE;
+                color:#0B5E94;
                 padding:6px 12px;
                 border-radius:4px;
                 font-size:12px;
@@ -126,8 +124,9 @@ console.log("EMAIL IMAGE:", imageUrl);
               style="
                 margin:0 0 15px;
                 color:#13294B;
-                font-size:30px;
-                line-height:38px;
+                font-size:19px;
+                line-height:25px;
+                word-break:break-word;
               "
             >
               ${article.title}
@@ -136,8 +135,8 @@ console.log("EMAIL IMAGE:", imageUrl);
             <p
               style="
                 color:#5b6472;
-                font-size:16px;
-                line-height:28px;
+                font-size:14px;
+                line-height:22px;
                 margin-bottom:25px;
               "
             >
@@ -148,7 +147,7 @@ console.log("EMAIL IMAGE:", imageUrl);
               href="https://theabm.info/articles/${article.slug}"
               style="
                 background:#0B5E94;
-                color:#ffffff;
+                color:#fff;
                 text-decoration:none;
                 padding:12px 24px;
                 border-radius:6px;
@@ -185,10 +184,12 @@ console.log("EMAIL IMAGE:", imageUrl);
 <td align="center">
 
 <table
-  width="1000"
+  width="700"
   cellpadding="0"
   cellspacing="0"
   style="
+    width:100%;
+    max-width:700px;
     background:#ffffff;
     border-radius:12px;
     overflow:hidden;
@@ -200,7 +201,7 @@ console.log("EMAIL IMAGE:", imageUrl);
   align="center"
   style="
     background:#004B9A;
-    padding:50px 20px;
+    padding:30px 20px;
   "
 >
 <h1
@@ -208,16 +209,18 @@ console.log("EMAIL IMAGE:", imageUrl);
     color:#ffffff;
     margin:0;
     font-size:48px;
+    line-height:44px;
   "
 >
-Today's ABM News Digest
+Today's ABM News 
 </h1>
 
 <p
   style="
     color:#ffffff;
-    margin-top:15px;
-    font-size:20px;
+    margin:10px 0 0;
+    font-size:15px;
+    line-height:26px;
   "
 >
 All the latest articles from ABM, in one place.
@@ -240,50 +243,77 @@ ${articleList}
 </body>
 </html>
 `;
-      // SEND EMAILS
-      for (const subscriber of subscribers) {
-        await axios.post(
-          'https://api.brevo.com/v3/smtp/email',
-          {
-            sender: {
-              name: 'The ABM',
-              email: 'newsletter@theabm.info',
-            },
-            to: [
-              {
-                email: subscriber.email,
-              },
-            ],
-            subject: "Today's ABM News Digest",
-            htmlContent: html,
-          },
-          {
-            headers: {
-              accept: 'application/json',
-              'content-type': 'application/json',
-              'api-key': process.env.BREVO_API_KEY,
-            },
-          }
-        );
-      }
 
-    // MARK AS SENT
-for (const article of articles) {
-  await strapi.entityService.update(
-    'api::article.article',
-    article.id,
-    {
-      data: {
-        newsletterSent: true,
-        newsletterSentAt: new Date(),
+console.log("Articles:", articles.length);
+
+
+     // SEND EMAILS
+console.log("Articles:", articles.length);
+console.log("Subscribers:", subscribers.length);
+console.log("Starting to send emails...");
+
+let allEmailsSent = true;
+
+for (const subscriber of subscribers) {
+  try {
+    console.log("Sending to:", subscriber.email);
+
+    const response = await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        sender: {
+          name: 'The ABM',
+          email: 'newsletter@theabm.info',
+        },
+        to: [
+          {
+            email: subscriber.email,
+          },
+        ],
+        subject: "Today's ABM News",
+        htmlContent: html,
       },
-    }
-  );
+      {
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          'api-key': process.env.BREVO_API_KEY,
+        },
+      }
+    );
+
+    console.log("✅ Sent to:", subscriber.email);
+    console.log("Brevo Response:", response.data);
+
+  } catch (error) {
+  allEmailsSent = false;
+
+  console.error("❌ Failed:", subscriber.email);
+  console.error(error.response?.data || error.message);
+}
+}
+// MARK ARTICLES AS SENT ONLY IF ALL EMAILS WERE SENT
+if (allEmailsSent) {
+  for (const article of articles) {
+    await strapi.entityService.update(
+      'api::article.article',
+      article.id,
+      {
+        data: {
+          newsletterSent: true,
+          newsletterSentAt: new Date(),
+        },
+      }
+    );
+
+    console.log("Updated:", article.title);
+  }
+
+  console.log("✅ All articles marked as sent.");
+} else {
+  console.log("❌ Some emails failed. Articles were NOT marked as sent.");
 }
 
-      console.log(
-        `Newsletter sent with ${articles.length} articles to ${subscribers.length} subscribers`
-      );
     } catch (err) {
       console.error('Newsletter Error:', err.response?.data || err);
     }
